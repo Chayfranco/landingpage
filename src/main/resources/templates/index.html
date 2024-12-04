@@ -19,8 +19,114 @@
   <link href="https://fonts.googleapis.com/css2?family=Judson:ital,wght@0,400;0,700;1,400&display=swap"
     rel="stylesheet">
   <style>
+    .slider {
+      position: relative;
+      width: 100%;
+      height: 100vh; /* Slider ocupa a altura total da tela */
+      overflow: hidden;
+    }
+    
+    .slides {
+      display: flex;
+      width: 100%; /* Três slides = 3x a largura */
+      height: 100%;
+      transition: transform 0.5s ease-in-out; /* Transição suave */
+    }
+    
+    .slide {
+      width: 100%; /* Cada slide ocupa 1/3 da largura */
+      height: 100%;
+      flex-shrink: 0;
+      position: relative;
+    }
+    
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    
+    /* Adiciona uma camada escura sobre as imagens */
+    .slide::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5); /* Camada preta com 50% de opacidade */
+      z-index: 1; /* Coloca a camada acima da imagem */
+    }
+    
+    /* Garante que o conteúdo sobre a imagem fique acima da camada */
+    .overlay-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2; /* Garante que sobreponha a camada escura */
+    }
+    
+    .overlay-content .logo {
+      width: 300px;
+      height: 300px;
+      z-index: 3; /* Destaque da logo */
+    }
+    
+    .overlay-content .common-text {
+      color: blue;
+      text-align: center;
+      z-index: 3; /* Destaque do texto */
+    }
+    
+    .overlay-content .btn {
+      margin-top: 10px;
+      z-index: 3; /* Destaque do botão */
+    }
+    
+    .manual-navigation {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    
+    .manual-btn {
+      border: 2px solid white;
+      padding: 5px;
+      border-radius: 50%;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+    
+    #radio1, #radio2, #radio3 {
+      display: none; /* Esconde os radio buttons */
+    }
+    
+    /* Transições de slides */
+    #radio1:checked ~ .slides {
+      transform: translateX(0); /* Mostra o primeiro slide */
+    }
+    
+    #radio2:checked ~ .slides {
+      transform: translateX(-100%); /* Mostra o segundo slide */
+    }
+    
+    #radio3:checked ~ .slides {
+      transform: translateX(-200%); /* Mostra o terceiro slide */
+    }
+    
+    
+
     .scroller {
       max-width: 100%;
+
     }
 
     .scroller__inner {
@@ -88,6 +194,47 @@
       border-radius: 0.5rem;
       box-shadow: 0 0.5rem 1rem -0.25rem var(--clr-primary-900);
     }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 5%;
+    }
+    
+    .text-section {
+      width: 50%;
+      padding-right: 2%;
+    }
+    
+    .dynamic-text {
+      color: #003366;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      line-height: 1.6;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: transform 1s ease-out, opacity 1s ease-out;
+    }
+    
+    .logo-section {
+      width: 50%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .img-apoio {
+      width: 100px;
+      height: auto;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+    }
+    
+    .img-apoio:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    
   </style>
   <style>
     * {
@@ -262,60 +409,122 @@
     <a class="link-cta" href="#email">FALE CONOSCO</a>
   </header>
   <main class="corpo">
-    <div id="bg" style="height: 80%; overflow: hidden; background-image: url(http://localhost:8080/images/Captura.jpeg); background-repeat: no-repeat; background-size: cover;background-color: rgba(0, 0, 0, 0.5);
-  background-blend-mode: overlay;">
-
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-direction: column;">
-        <div style="align-items: center;display: flex;flex-direction: column; align-self: start; padding-left: 2%;">
-          <img th:src="@{images/LogoReduzido-Cor.png}" alt="logo" class="logo"
-            style="width: 300px;height: 300px;align-self: center;">
-          <br>
-          <img th:src="@{images/MoRHInGA_Cor_H.png}" alt="logo" class="logo"
-            style="width: auto;height: 100px;align-self: center;">
+    <div class="slider">
+      <div class="slides">
+        <input type="radio" name="radio-btn" id="radio1" checked />
+        <input type="radio" name="radio-btn" id="radio2" />
+        <input type="radio" name="radio-btn" id="radio3" />
+    
+        <div class="slide">
+          <img src="images\Captura de tela 2024-12-03 211013.png" alt="Imagem 1" />
         </div>
-        <div style="display: flex; flex-direction: column; align-items: start; margin: 4%; align-self: first baseline;">
-          <h1 class="common-text" style="color: blue;">
-            PROJETO MoRHInGA</h1>
-          <button class="btn btn-primary"><a class="common-text" href="#quem-somos">CONHEÇA</a></button>
+        <div class="slide">
+          <img src="images\Captura de tela 2024-12-03 211040.png" alt="Imagem 2" />
+        </div>
+        <div class="slide">
+          <img src="images\Captura de tela 2024-12-03 211013.png" alt="Imagem 3" />
         </div>
       </div>
-
+    
+      <div class="manual-navigation">
+        <label for="radio1" class="manual-btn"></label>
+        <label for="radio2" class="manual-btn"></label>
+        <label for="radio3" class="manual-btn"></label>
+      </div>
     </div>
-
-    <div id="quem-somos" style="display: flex; align-items: center; background:
-    linear-gradient(0deg, rgb(134, 168, 79), rgb(17, 76, 133))">
-      <div>
-        <div style="padding: 2% 8%; background-color: transparent; border-radius: 10px; transition: transform 0.3s ease-in-out;">
-          <h6 class="common-text"
-              style="color: #EAEAEA; text-align: justify; font-size: 1.1rem; line-height: 1.6; text-justify: inter-word; transition: transform 0.3s ease-in-out;"
-              onmouseover="this.style.transform='translateY(-5px)';"
-              onmouseout="this.style.transform='translateY(0)';">
-            <p style="margin-bottom: 1.5rem; font-weight: 300;">O projeto <strong style="color: #FFA726;">MoRHinga</strong> é uma iniciativa inovadora dedicada à pesquisa e desenvolvimento tecnológico, focada na gestão sustentável dos recursos hídricos no semiárido pernambucano, uma das regiões mais desafiadoras do Brasil. Nosso objetivo principal é desenvolver uma plataforma web avançada que integra tecnologias de sensoriamento remoto via satélite, inteligência artificial e modelagem espacial, juntamente com sensores acessíveis para medições in-loco. Esta plataforma visa melhorar a supervisão, administração, regulamentação e categorização do uso e ocupação do solo nas áreas influenciadas por reservatórios estratégicos da região.</p>
-            <p style="margin-bottom: 1.5rem; font-weight: 300;">No <strong style="color: #FFA726;">MoRHinga</strong>, adotamos uma abordagem multidisciplinar, reunindo especialistas e instituições de diversas áreas, incluindo ciências ambientais, hidrologia, solos, meteorologia e engenharia. Nossa equipe está comprometida com a excelência científica e tecnológica, trabalhando em conjunto para identificar as vulnerabilidades do sistema hídrico de Pernambuco e recomendar ações que promovam a resiliência climática e o desenvolvimento sustentável.</p>
-            <p style="margin-bottom: 0; font-weight: 300;">Nosso compromisso é com a produção de conhecimento de alta qualidade, formação de recursos humanos altamente qualificados e transferência de tecnologias para a sociedade. As iniciativas do projeto <strong style="color: #FFA726;">MoRHinga</strong> visam não apenas enfrentar os desafios ambientais e socioeconômicos do semiárido pernambucano, mas também promover a melhoria contínua da qualidade de vida das populações locais.</p>
-          </h6>
+    
+    
+      <!-- Logo, nome do projeto e botão sobrepondo os slides -->
+      <div class="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 10;">
+        <div style="align-items: center; display: flex; flex-direction: column; padding-left: 2%;">
+          <img th:src="@{images/LogoReduzido-Cor.png}" alt="logo" class="logo" style="width: 300px; height: 300px; align-self: center;">
+          <br>
+          <img th:src="@{images/MoRHInGA_Cor_H.png}" alt="logo" class="logo" style="width: auto; height: 100px; align-self: center;">
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; margin: 4%; text-align: center;">
+          <h1 style="color: #003366; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 3rem; font-weight: 700; margin-bottom: 50px; animation: slideIn 2s ease-out;">
+            PROJETO MoRHInGA
+          </h1>
+          <button style="padding: 12px 24px; background: rgba(255, 255, 255, 0.6); color: #003366; border: 2px solid rgba(255, 255, 255, 0.6); border-radius: 8px; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); display: flex; align-items: center; justify-content: center; transition: background 0.3s, transform 0.3s; margin-top: -45px;"
+            onmouseover="this.style.background='rgba(255, 255, 255, 1)'; this.style.transform='translateY(-4px)';"
+            onmouseout="this.style.background='rgba(255, 255, 255, 0.6)'; this.style.transform='translateY(0)';">
+            <a href="#quem-somos" style="color: #003366; text-decoration: none;">CONHEÇA</a>
+          </button>
         </div>
         
-      </div>
-      <div style="margin-right: 5%; width: 50%;">
-        <img th:src="@{images/Captura de tela_2-12-2024_45952_.jpeg}" style="width: 600px;" alt="">
+        <style>
+          @keyframes slideIn {
+            from {
+              opacity: 0;
+              transform: translateY(-20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        </style>
+        
+        
       </div>
     </div>
+    
+
+    <style>
+      .text-section p {
+        opacity: 0.6;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+    
+      .text-section p:hover {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+    
+      .image-container img {
+        border: 5px solid rgba(255, 165, 38, 0.5);
+        border-radius: 10px;
+        transition: transform 0.3s ease, border-color 0.3s ease;
+      }
+    
+      .image-container img:hover {
+        transform: scale(1.1);
+        border-color: rgba(255, 165, 38, 0.8);
+      }
+    </style>
+    
+    <div id="quem-somos" style="display: flex; align-items: center; background:
+        linear-gradient(0deg, rgb(134, 168, 79), rgb(17, 76, 133));">
+      <div class="text-section" style="padding: 2% 8%; background-color: transparent; border-radius: 10px;">
+        <h6 class="common-text"
+            style="font-family: inherit; color: #EAEAEA; text-align: justify; font-size: 1.1rem; line-height: 1.6; text-justify: inter-word;">
+          <p style="margin-bottom: 1.5rem; font-weight: 300;">O projeto <strong style="color: #FFA726;">MoRHinga</strong> é uma iniciativa inovadora dedicada à pesquisa e desenvolvimento tecnológico, focada na gestão sustentável dos recursos hídricos no semiárido pernambucano, uma das regiões mais desafiadoras do Brasil. Nosso objetivo principal é desenvolver uma plataforma web avançada que integra tecnologias de sensoriamento remoto via satélite, inteligência artificial e modelagem espacial, juntamente com sensores acessíveis para medições in-loco. Esta plataforma visa melhorar a supervisão, administração, regulamentação e categorização do uso e ocupação do solo nas áreas influenciadas por reservatórios estratégicos da região.</p>
+          <p style="margin-bottom: 1.5rem; font-weight: 300;">No <strong style="color: #FFA726;">MoRHinga</strong>, adotamos uma abordagem multidisciplinar, reunindo especialistas e instituições de diversas áreas, incluindo ciências ambientais, hidrologia, solos, meteorologia e engenharia. Nossa equipe está comprometida com a excelência científica e tecnológica, trabalhando em conjunto para identificar as vulnerabilidades do sistema hídrico de Pernambuco e recomendar ações que promovam a resiliência climática e o desenvolvimento sustentável.</p>
+          <p style="margin-bottom: 0; font-weight: 300;">Nosso compromisso é com a produção de conhecimento de alta qualidade, formação de recursos humanos altamente qualificados e transferência de tecnologias para a sociedade. As iniciativas do projeto <strong style="color: #FFA726;">MoRHinga</strong> visam não apenas enfrentar os desafios ambientais e socioeconômicos do semiárido pernambucano, mas também promover a melhoria contínua da qualidade de vida das populações locais.</p>
+        </h6>
+      </div>
+    
+      <div class="image-container" style="margin-right: 5%; width: 50%;">
+        <img th:src="@{images/Captura de tela_2-12-2024_45952_.jpeg}" style="width: 100%;" alt="">
+      </div>
+    </div>
+    
 
     <div id="equipe"
       style="padding: 10%; display: flex; justify-content: center; background: linear-gradient(0deg, rgb(17, 76, 133), rgb(134, 168, 79)10%); flex-grow: 1; flex-wrap: wrap; color: white;">
       <div style="width: 100%; text-align: center; color: white;">
-        <h1>COORDENADORES</h1>
+        <h1 style="font-family: 'Arial', sans-serif; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; color: white; border-bottom: 2px solid white; display: inline-block; padding-bottom: 5px;">
+          Coordenadores
+        </h1>
       </div>
+      
 
       <div class="" style="max-width: 100%;" data-direction="left" data-speed="stop">
         <div class="" style="padding-block: 1rem; display: flex; flex-wrap: nowrap; gap: 1rem;">
           <div class="equipe-individuo">
             <a href="http://lattes.cnpq.br/3690303625468223">
               <img class="img-individuo" th:src="@{images/Alan.jpg}" alt="" />
-              <div class="nome-coord">
-                <p class="equipe-individuo-nome">Alan Cezar</p>
-              </div>
+              <p class="equipe-individuo-nome">Alan Cezar</p>
               <p>Professor de Engenharia</p>
               <p>Curriculo Lattes <i class="bi bi-box-arrow-up-right"></i></p>
             </a>
@@ -332,7 +541,7 @@
             <a href="http://lattes.cnpq.br/3010818143250408">
               <img class="img-individuo" th:src="@{images/Professores/romualdo.jpg}" alt="" />
               <p class="equipe-individuo-nome">José Romualdo de Sousa Lima</p>
-              <p>Professor de Engenheiria</p>
+              <p>Professor de Engenharia</p>
               <p>Curriculo Lattes <i class="bi bi-box-arrow-up-right"></i></p>
             </a>
           </div>
@@ -358,14 +567,15 @@
               color: #FFB74D; /* Cor de destaque */
             }
           </style>
-          
-
-
+        
         </div>
       </div>
       <div style="width: 100%; text-align: center; color: white;">
-        <h1>COLABORADORES</h1>
+        <h1 style="font-family: 'Arial', sans-serif; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; color: white; border-bottom: 2px solid white; display: inline-block; padding-bottom: 5px;">
+          Colaboradores
+        </h1>
       </div>
+      
       <div class="scroller" data-direction="left" data-speed="slow">
         <div class="scroller__inner">
           <div class="equipe-individuo">
@@ -470,75 +680,166 @@
         </div>
       </div>
 
-      <div style="display: flex; align-items: start; align-items: center;">
-        <div style="width: 50%; padding: 5%;">
-          <p>O Projeto MorHINGA é composto por uma equipe multidisciplinar de professores, pesquisadores, estudantes e
-            técnicos de laboratório das seguintes instituições: UFRPE, UFAPE, UFPE, IFPE, IPA, ITEP e o Observatório
-            Nacional da Dinâmica da Água e do Carbono no Bioma Caatinga (OndaCBC). Nossa equipe é altamente qualificada
-            e comprometida com o desenvolvimento de ferramentas tecnológicas inovadoras para a gestão hídrica
-            sustentável.
+      <div class="container">
+        <div style="display: flex; flex-direction: column; align-items: center; padding: 5%;">
+          <div style="width: 100%; text-align: justify; margin-bottom: 3%;">
+            <p id="dynamicText" style="color: #003366;  font-family: inherit; font-size: 1.2rem; font-weight: 400; line-height: 1.6; opacity: 0; transform: translateY(20px); transition: transform 1s ease-out, opacity 1s ease-out;">
+              O Projeto <strong style="color: #FFA726;">MoRHinga</strong> é composto por uma equipe multidisciplinar de professores, pesquisadores, estudantes e técnicos de laboratório das seguintes instituições: UFRPE, UFAPE, UFPE, IFPE, IPA, ITEP e o Observatório Nacional da Dinâmica da Água e do Carbono no Bioma Caatinga (OndaCBC). Nossa equipe é altamente qualificada e comprometida com o desenvolvimento de ferramentas tecnológicas inovadoras para a gestão hídrica sustentável.
+            </p>
+          </div>
+          <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; width: 100%;">
+            <img src="https://seeklogo.com/images/U/ufrpe-logo-B8299D009E-seeklogo.com.png" style="width: 80px; height: auto; transition: transform 0.3s ease-in-out, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.2)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" alt="">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1I_NXUITsrHlKE-Mv2c3vB7gOBTMPb0auGQ&s" style="width: 80px; height: auto; transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.2)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" alt="">
+            <img src="https://seeklogo.com/images/U/ufpe-univesidade-federal-de-pernambuco-logo-8E76BE230C-seeklogo.com.png" style="width: 80px; height: auto; transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.2)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" alt="">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4DpuBIHJjVUojTJNv_Yd3_3bf_OYdErIzqw&s" style="width: 80px; height: auto; transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.2)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" alt="">
+            <img src="https://yt3.googleusercontent.com/AnWO-dpB3GDm1VgMWAjEhqWEbR1oxEFPwl2cEuL3cscChfvAgAPyctW4KcYzBZDRunY26c9P2g=s900-c-k-c0x00ffffff-no-rj" style="width: 80px; height: auto; transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.2)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" alt="">
+            <img src="https://www.ncti.com.br/wp-content/uploads/2014/02/ITEP.png" style="width: 80px; height: auto; transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.2)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" alt="">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrXK3TiPi4tOkjOCvIXboEvMTK6J2al7LAmA&s" style="width: 80px; height: auto; transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.2)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" alt="">
+          </div>
+        </div>
+        
+        <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            const textSection = document.getElementById('dynamicText');
+        
+            // Função para animar o texto
+            function animateText() {
+              const rect = textSection.getBoundingClientRect();
+              if (rect.top <= window.innerHeight && rect.bottom >= 0) {
+                textSection.style.opacity = 1;
+                textSection.style.transform = 'translateY(0)';
+                textSection.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
+              }
+            }
+        
+            // Verifica a animação na rolagem
+            window.addEventListener('scroll', animateText);
+        
+            // Verifica a animação na carga da página para capturar caso esteja visível
+            animateText();
+          });
+        </script>
+        
+      </div>
+      
+
+      <div class="about-section" style=" font-family: inherit; color: #00336">
+        <div class="mission-statement">
+          <p class="description" style=" font-family: inherit; color: #00336"> 
+            Nosso compromisso é com a excelência na pesquisa, desenvolvimento tecnológico, formação de recursos humanos e
+            a transferência de conhecimento para a sociedade. Juntos, estamos trabalhando para enfrentar os desafios
+            ambientais e socioeconômicos do semiárido pernambucano, promovendo um futuro sustentável para todos.
           </p>
         </div>
-        <div style="padding-top: 5%; width: 50%;">
-          <img src="https://seeklogo.com/images/U/ufrpe-logo-B8299D009E-seeklogo.com.png" class="img-apoio" alt="">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1I_NXUITsrHlKE-Mv2c3vB7gOBTMPb0auGQ&s"
-            class="img-apoio" alt="">
-          <img
-            src="https://seeklogo.com/images/U/ufpe-univesidade-federal-de-pernambuco-logo-8E76BE230C-seeklogo.com.png"
-            class="img-apoio" alt="">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4DpuBIHJjVUojTJNv_Yd3_3bf_OYdErIzqw&s"
-            class="img-apoio" alt="">
-          <img
-            src="https://yt3.googleusercontent.com/AnWO-dpB3GDm1VgMWAjEhqWEbR1oxEFPwl2cEuL3cscChfvAgAPyctW4KcYzBZDRunY26c9P2g=s900-c-k-c0x00ffffff-no-rj"
-            class="img-apoio" alt="">
-          <img src="https://www.ncti.com.br/wp-content/uploads/2014/02/ITEP.png" class="img-apoio" alt="">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrXK3TiPi4tOkjOCvIXboEvMTK6J2al7LAmA&s"
-            class="img-apoio" alt="">
+      
+        <div class="funding-section">
+          <div class="text-center">
+            <h3 class="section-title"><strong style="color: #00336;">Instituições Financiadoras da Pesquisa e Edital Aprovado</strong></h3>
+          </div>
+          <p class="description" style=" font-family: inherit; color: #00336" >
+            O projeto <strong style="color: #FFA726;">MoRHinga</strong> é um esforço colaborativo que conta com o apoio financeiro de várias instituições,
+            essenciais para a viabilização das pesquisas e desenvolvimento de tecnologias inovadoras. Entre as principais
+            instituições financiadoras, destacam-se a <span class="highlight">FACEPE</span> e a <span class="highlight">APAC</span>.
+          </p>
         </div>
       </div>
 
-      <div class="pt-2">
-        <p>Nosso compromisso é com a excelência na pesquisa, desenvolvimento tecnológico, formação de recursos humanos e
-          a transferência de conhecimento para a sociedade. Juntos, estamos trabalhando para enfrentar os desafios
-          ambientais e socioeconômicos do semiárido pernambucano, promovendo um futuro sustentável para todos.</p>
-      </div>
-      <div>
-        <div class="text-center">
-          <h3>Instituições Financiadoras da Pesquisa e Edital Aprovado</h3>
-        </div>
-        <p>O projeto MoRHinga é um esforço colaborativo que conta com o apoio financeiro de várias instituições,
-          essenciais para a viabilização das pesquisas e desenvolvimento de tecnologias inovadoras. Entre as principais
-          instituições financiadoras, destacam-se a FACEPE e a APAC.</p>
-      </div>
-      <div class="pt-5 d-flex flex-wrap flex-grow-1 align-items-center">
+      
+      
+      <style>
+        .about-section {
+          margin: 2rem auto;
+          padding: 2rem;
+          border-radius: 10px;
+          max-width: 900px;
+          transition: transform 0.3s ease, padding 0.3s ease;
+          color: #00336;
+        }
+      
+        .about-section:hover {
+          transform: scale(1.10);
+          padding: 2.5rem;
+        }
+      
+        .mission-statement {
+          margin-bottom: 2rem;
+        }
+      
+        .description {
+          font-size: 1.25rem;
+          line-height: 1.8;
+          color: #333;
+          text-align: justify;
+          transition: transform 0.3s ease;
+        }
+      
+        .description:hover {
+          transform: scale(1.05);
+        }
+      
+        .funding-section {
+          margin-top: 2rem;
+        }
+      
+        .section-title {
+          font-size: 1.75rem;
+          color: #004085;
+          margin-bottom: 1rem;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          font-weight: bold;
+          transition: transform 0.3s ease;
+        }
+      
+        .section-title:hover {
+          transform: scale(1.1);
+          color: #003366;
+        }
+      
+        .highlight {
+          font-weight: bold;
+          color: #0056b3;
+        }
+      
+        .text-center {
+          text-align: center;
+        }
+      </style>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px;">
 
-        <div style="text-align: justify;">
+
+        <div style=" flex: 1; width: 48%; text-align: justify; background-color: rgba(255, 165, 38, 0.1); padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-right: 4%; transition: transform 0.3s ease, box-shadow 0.3s ease; display: inline-block;">
           <div class="d-flex justify-content-center p-2">
-            <img src="https://www.facepe.br/wp-content/uploads/2014/04/Marca-FACEPE.png" class="img-apoio" alt="">
+            <img src="https://www.facepe.br/wp-content/uploads/2014/04/Marca-FACEPE.png" class="img-apoio" style="width: 250px; height: auto;" alt="">
           </div>
           <div class="text-center">
-            <p>FACEPE - Fundação de Amparo à Ciência e Tecnologia do Estado de Pernambuco</p>
+            <p style="font-size: 1.5rem; font-weight: 600; color: #003366;">FACEPE - Fundação de Amparo à Ciência e Tecnologia do Estado de Pernambuco</p>
           </div>
-          <p>A FACEPE é uma das principais financiadoras do projeto MorHINGA, reconhecida por seu papel vital no apoio
+          <p style="color: #333; font-size: 1rem; line-height: 1.6;">
+            A FACEPE é uma das principais financiadoras do projeto <strong style="color: #FFA726;">MoRHinga</strong>, reconhecida por seu papel vital no apoio
             ao desenvolvimento científico e tecnológico em Pernambuco. Através do seu edital de apoio à pesquisa, a
             FACEPE proporciona os recursos necessários para a execução de projetos inovadores e relevantes, contribuindo
             significativamente para a formação de recursos humanos qualificados e para a geração de conhecimentos
             científicos aplicados.
           </p>
         </div>
-        <div>
+        
+        <div style="flex: 1; width: 48%; text-align: justify; background-color: rgba(255, 165, 38, 0.1); padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-left: 4%; transition: transform 0.3s ease, box-shadow 0.3s ease; display: inline-block;">
           <div class="d-flex justify-content-center">
-            <img src="https://www.apac.pe.gov.br/images/Marca_Apac_2020_hor_positiva.png" class="img-apoio" alt="">
+            <img src="https://www.apac.pe.gov.br/images/Marca_Apac_2020_hor_positiva.png" class="img-apoio" style="width: 250px; height: auto;" alt="">
           </div>
           <div class="text-center">
-            <p>APAC - Agência Pernambucana de Águas e Clima</p>
+            <p style="font-size: 1.5rem; font-weight: 600; color: #003366;">APAC - Agência Pernambucana de Águas e Clima</p>
           </div>
-          <p>A APAC desempenha um papel crucial no financiamento do projeto MorHINGA, particularmente na área de gestão
+          <p style="color: #333; font-size: 1rem; line-height: 1.6;">
+            A APAC desempenha um papel crucial no financiamento do projeto <strong style="color: #FFA726;">MoRHinga</strong>, particularmente na área de gestão
             e monitoramento dos recursos hídricos. Através de seus programas e editais de apoio, a APAC oferece suporte
             financeiro e técnico para projetos que visam aprimorar a gestão da água e do clima no estado de Pernambuco.
             A contribuição da APAC é fundamental para o desenvolvimento de ferramentas tecnológicas que permitem uma
-            gestão mais eficiente e sustentável dos recursos hídricos.</p>
+            gestão mais eficiente e sustentável dos recursos hídricos.
+          </p>
         </div>
+        
       </div>
     </div>
 
@@ -546,28 +847,59 @@
 
     </div>
 
-    <div id="email" style="background-color: rgb(17, 76, 133); padding: 5%; color: white; padding: 10%;">
+    <div id="email" style="background-color: rgb(17, 76, 133); padding: 5%; color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
       <form th:action="@{/contatar}" th:object="${email}" enctype="multipart/form-data" method="post">
-        <h2 class="common-text">SE INTERESSOU PELOS NOSSOS SERVIÇOS?</h2>
-        <h5 class="common-text">ENVIE UM EMAIL ABAIXO, IREMOS RETORNAR ASSIM QUE POSSIVEL.</h5>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="my-input-group" id="basic-addon1">Seu Email: </span>
+        <h2 class="common-text" style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem; text-align: center; color: white; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);">SE INTERESSOU PELOS NOSSOS SERVIÇOS?</h2>
+        <h5 class="common-text" style="font-size: 1.5rem; margin-bottom: 2rem; text-align: center; color: #FFA726; font-weight: 500;">ENVIE UM EMAIL ABAIXO, IREMOS RETORNAR ASSIM QUE POSSÍVEL.</h5>
+        
+        <div class="input-group mb-4" style="overflow: hidden;">
+          <div class="input-group-prepend" style="background-color: #00509E; color: white; font-weight: bold; padding: 10px; border-right: 2px solid #003366;">
+            <span class="my-input-group">Seu Email:</span>
           </div>
           <input type="text" th:field="*{from}" class="form-control" placeholder="exemplo@email.com"
-            aria-label="Username" aria-describedby="basic-addon1">
+            aria-label="Username" aria-describedby="basic-addon1" style="border: none; box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s; padding: 10px;">
         </div>
-        <div class="input-group">
-          <div class="input-group-prepend">
+        
+        <div class="input-group mb-4" style="overflow: hidden;">
+          <div class="input-group-prepend" style="background-color: #00509E; color: white; font-weight: bold; padding: 10px; border-right: 2px solid #003366;">
             <span class="my-input-group">Conteúdo:</span>
           </div>
           <textarea class="form-control" th:field="*{mensagem}" id="conteudo" aria-label="With textarea"
-            placeholder="Digite seu email..."></textarea>
+            placeholder="Digite sua mensagem..." style="border: none; box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); transition: box-shadow 0.3s; padding: 10px;"></textarea>
         </div>
-        <div style="display: flex; justify-content: end;"><span style="align-content: end; margin-top: 3%;"><button
-              type="submit" class="btn btn-primary">Enviar</button></span></div>
+    
+        <div style="display: flex; justify-content: center; margin-top: 2rem;">
+          <button type="submit" style="padding: 12px 24px; background: rgba(255, 255, 255, 0.6); color: #003366; border: 2px solid rgba(255, 255, 255, 0.6); border-radius: 8px; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); display: flex; align-items: center; justify-content: center; transition: background 0.3s, transform 0.3s;"
+            onmouseover="this.style.background='rgba(255, 255, 255, 1)'; this.style.transform='translateY(-4px)';"
+            onmouseout="this.style.background='rgba(255, 255, 255, 0.6)'; this.style.transform='translateY(0)';">
+            <span style="color: #003366; text-decoration: none; font-weight: 600;">Enviar</span>
+          </button>
+        </div>
       </form>
     </div>
+    
+    
+    <!-- Adicionando interatividade com JavaScript -->
+    <script>
+      document.querySelectorAll('.form-control').forEach(input => {
+        input.addEventListener('focus', function() {
+          this.style.boxShadow = '0 0 8px rgba(0, 120, 255, 0.4)';
+        });
+        input.addEventListener('blur', function() {
+          this.style.boxShadow = 'inset 0 0 5px rgba(0, 0, 0, 0.1)';
+        });
+      });
+    
+      document.querySelector('button').addEventListener('mouseover', function() {
+        this.style.backgroundColor = '#FF8C42';
+        this.style.transform = 'translateY(-3px)';
+      });
+      document.querySelector('button').addEventListener('mouseout', function() {
+        this.style.backgroundColor = '#FFA726';
+        this.style.transform = 'translateY(0)';
+      });
+    </script>
+    
   </main>
 </body>
 
@@ -599,6 +931,37 @@
     });
   }
 
+
+  let count = 1;
+  document.getElementById("radio1").checked = true;
+  
+  const radios = document.querySelector
+  
+  setInterval(function () {
+    nextImage();
+  }, 5000);
+  
+  function nextImage() {
+    count++;
+    if (count > 3) {
+      count = 1;
+    }
+    document.getElementById(`radio${count}`).checked = true;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const textSection = document.querySelector('.dynamic-text');
+  
+    // Adiciona uma pequena animação de entrada quando a seção está na tela
+    window.addEventListener('scroll', () => {
+      const rect = textSection.getBoundingClientRect();
+      if (rect.top <= window.innerHeight && rect.bottom >= 0) {
+        textSection.style.opacity = 1;
+        textSection.style.transform = 'translateY(0)';
+      }
+    });
+  });
+  
 </script>
 
 </html>
